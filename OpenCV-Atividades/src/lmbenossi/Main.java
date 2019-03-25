@@ -34,4 +34,24 @@ public class Main {
 		
 		return zoomed;		
 	}
+	
+	public static Mat zoomInLinear(Mat og) {
+		int rows = og.rows();
+		int cols = og.cols();
+		
+		Mat zoomed = new Mat(rows * 2, cols * 2, og.type());
+		
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				double[] rgb = og.get(i,  j);  // TODO
+				
+				zoomed.put(2 * i, 2 * j, rgb);
+				zoomed.put(2 * i, 2 * j + 1, rgb);
+				zoomed.put(2 * i + 1, 2 * j, rgb);
+				zoomed.put(2 * i + 1, 2 * j + 1, rgb);
+			}
+		}
+		
+		return zoomed;		
+	}
 }
