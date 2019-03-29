@@ -1,1 +1,1 @@
-# 5COP012-CG
+# Computação Gráfica
