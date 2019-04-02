@@ -3,20 +3,36 @@ package lmbenossi;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
 public class HistEq {
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		
-		Imgcodecs.imwrite("hist-grayscale-eq.png", eqGrayscale(Imgcodecs.imread("hist-grayscale.png")));
-		Imgcodecs.imwrite("hist-color-eq.png", eqAllChannels(Imgcodecs.imread("hist-color.png")));
+		Imgcodecs.imwrite("grayscale-eqGrayscale.png", eqGrayscale(Imgcodecs.imread("grayscale.png")));
+		Imgcodecs.imwrite("grayscale-eqHSV.png", eqHSV(Imgcodecs.imread("grayscale.png")));
+		
+		Imgcodecs.imwrite("color-eqAllChannels.png", eqAllChannels(Imgcodecs.imread("color.png")));
+		Imgcodecs.imwrite("color-eqHSV.png", eqHSV(Imgcodecs.imread("color.png")));
 		
 		System.out.println("done");
 	}
 	
+	public static Mat eqHSV(Mat img) {
+		Mat hsv = img.clone();
+		Imgproc.cvtColor(img, hsv, Imgproc.COLOR_RGB2HSV);
+		
+		eqChannel(hsv, 2);
+		
+		Mat rgb = hsv.clone();
+		Imgproc.cvtColor(hsv, rgb, Imgproc.COLOR_HSV2BGR);
+		
+		return rgb;
+	}
+	
 	public static Mat eqGrayscale(Mat img) {
 		Mat eq = img.clone();
-		eq = eqChannel(eq, 0);
+		eqChannel(eq, 0);
 		
 		for(int i = 0; i < img.rows(); i++) {
 			for(int j = 0; j < img.cols(); j++) {
@@ -34,13 +50,13 @@ public class HistEq {
 		Mat eq = img.clone();
 		
 		for(int channel = 0; channel < 3; channel ++) {
-			eq = eqChannel(img, channel);
+			eqChannel(eq, channel);
 		}
 		
 		return eq;
 	}
 	
-	public static Mat eqChannel(Mat img, int channel) {
+	public static void eqChannel(Mat img, int channel) {
 		int H[] = new int[256];
 		for(int i = 0; i < H.length; i++) {
 			H[i] = 0;
@@ -74,8 +90,6 @@ public class HistEq {
 				img.put(i, j, pixel);
 			}
 		}
-		
-		return img;
 	}
 
 }
