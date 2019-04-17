@@ -38,9 +38,11 @@ public class SeparacaoCanais{
 			
 			for(int i = 0; i < img.rows(); i++) {
 				for(int j = 0; j < img.cols(); j++) {
-					double[] vetor = {0,0,0};
 					double[] im = img.get(i,j);
-					vetor[canal] = im[canal];
+					double[] vetor = {0,0,0};
+					vetor[0] = im[canal];
+					vetor[1] = im[canal];
+					vetor[2] = im[canal];
 					imgC.put(i,j, vetor);	
 				}
 			}
