@@ -35,11 +35,11 @@ public class Prova {
 		Mat hsv = img.clone();
 		Imgproc.cvtColor(img, hsv, Imgproc.COLOR_BGR2HSV);
 		
-		for(int i = 0; i < img.rows(); i++) {
-			for(int j = 0; j < img.cols(); j++) {
-				double[] pixel = hsv.get(i, j);
+		for(int x = 0; x < img.rows(); x++) {
+			for(int y = 0; y < img.cols(); y++) {
+				double[] pixel = hsv.get(x, y);
 				pixel[1] = 0;
-				hsv.put(i, j, pixel);
+				hsv.put(x, y, pixel);
 			}
 		}
 		
