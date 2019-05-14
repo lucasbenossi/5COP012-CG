@@ -19,7 +19,7 @@ public class Esqueletizacao {
     	System.out.println("done");
     }
     
-    private static Mat lantuejoul(Mat img) {
+    public static Mat lantuejoul(Mat img) {
     	Mat result = new Mat(img.rows(), img.cols(), img.type());
         fillWhite(result);
 
