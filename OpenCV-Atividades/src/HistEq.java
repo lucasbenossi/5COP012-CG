@@ -20,14 +20,14 @@ public class HistEq {
 	
 	public static Mat eqHSV(Mat img) {
 		Mat hsv = img.clone();
-		Imgproc.cvtColor(img, hsv, Imgproc.COLOR_RGB2HSV);
+		Imgproc.cvtColor(img, hsv, Imgproc.COLOR_BGR2HSV);
 		
 		eqChannel(hsv, 2);
 		
-		Mat rgb = hsv.clone();
-		Imgproc.cvtColor(hsv, rgb, Imgproc.COLOR_HSV2BGR);
+		Mat bgr = hsv.clone();
+		Imgproc.cvtColor(hsv, bgr, Imgproc.COLOR_HSV2BGR);
 		
-		return rgb;
+		return bgr;
 	}
 	
 	public static Mat eqGrayscale(Mat img) {
