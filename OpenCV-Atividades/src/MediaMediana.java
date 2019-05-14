@@ -14,36 +14,41 @@ public class MediaMediana {
 		Mat og = Imgcodecs.imread(prefix + ".png");
 		Mat cinza = Prova.toGrayscale(og);
 		
-		Imgcodecs.imwrite(prefix + "-cinza.png", cinza);
-		for(int i = 0; i < 10; i++) {
-			cinza = medianaCinza(cinza);
+		Mat media = og;
+		Mat cinzaMedia = cinza;
+		Mat mediana = og;
+		Mat cinzaMediana = cinza;
+		
+		for(int i = 0; i < 3; i++) {
+			media = media(media);
+			cinzaMedia = media(cinzaMedia);
+			mediana = mediana(mediana);
+			cinzaMediana = mediana(cinzaMediana);
 		}
-		Imgcodecs.imwrite(prefix + "-mediana-cinza.png", cinza);
+		
+		Imgcodecs.imwrite(prefix + "-cinza.png", cinza);
+		Imgcodecs.imwrite(prefix + "-media.png", media);
+		Imgcodecs.imwrite(prefix + "-cinza-media.png", cinzaMedia);
+		Imgcodecs.imwrite(prefix + "-mediana.png", mediana);
+		Imgcodecs.imwrite(prefix + "-cinza-mediana.png", cinzaMediana);
 		
 		System.out.println("done");
 	}
 	
-	public static Mat mediaCinza(Mat img) {
+	public static Mat media(Mat img) {
 		Mat novo = new Mat(img.rows(), img.cols(), img.type());
 		
 		for(int i = 0; i < img.rows(); i++) {
 			for(int j = 0; j < img.cols(); j++) {
-				double[] sum = {0, 0, 0};
-				int n = 0;
+				ArrayList<double[]> arr = new ArrayList<double[]>(9);
 				
 				for(int k = 0; k < 3; k++) {
 					for(int l = 0; l < 3; l++) {
-						double[] pixel = pixelOrNull(img, i-1+l, j-1+k);
-						if(pixel != null) {
-							for(int m = 0; m < 3; m++) {
-								sum[m] += pixel[m];
-							}
-							n++;
-						}
+						arr.add(pixelOrNull(img, i-1+l, j-1+k));
 					}
 				}
 				
-				double[] mean = {sum[0] / n, sum[1] / n, sum[2] / n};
+				double[] mean = mean(arr.toArray(new double[9][]));
 				novo.put(i, j, mean);
 			}
 		}
@@ -51,7 +56,8 @@ public class MediaMediana {
 		return novo;
 	}
 	
-	public static Mat medianaCinza(Mat img) {
+	
+	public static Mat mediana(Mat img) {
 		Mat novo = new Mat(img.rows(), img.cols(), img.type());
 		
 		for(int i = 0; i < img.rows(); i++) {
