@@ -8,7 +8,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 public class Convolucao {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		
 		String prefix = "hl2ep2";
@@ -16,29 +16,30 @@ public class Convolucao {
 		Mat color = Imgcodecs.imread(prefix + ".png");
 		Mat cinza = toGrayscale(color);
 		
-		Mat media = color;
-		Mat cinzaMedia = cinza;
-		Mat mediana = color;
-		Mat cinzaMediana = cinza;
+		Thread[] threads = new Thread[5];
+		threads[0] = new Thread(new DoWhatRunnable(prefix + "-color-mean.png", color, What.MEAN));
+		threads[1] = new Thread(new DoWhatRunnable(prefix + "-color-median.png", color, What.MEDIAN));
+		threads[2] = new Thread(new DoWhatRunnable(prefix + "-cinza-mean.png", cinza, What.MEAN));
+		threads[3] = new Thread(new DoWhatRunnable(prefix + "-cinza-median.png", cinza, What.MEDIAN));
+		threads[4] = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				String prefix = "debian";
+				Mat img = Imgcodecs.imread(prefix + ".png");
+				String filename = prefix + "-sobel.png";
+				Imgcodecs.imwrite(filename, sobel(img, 50));
+				System.out.println("done " + filename);
+			}
+		});
 		
-		for(int i = 0; i < 10; i++) {
-			media = doWhat(media, What.MEAN);
-			cinzaMedia = doWhat(cinzaMedia, What.MEAN);
-			mediana = doWhat(mediana, What.MEDIAN);
-			cinzaMediana = doWhat(cinzaMediana, What.MEDIAN);
+		for(Thread thread : threads) {
+			thread.start();
 		}
 		
-		Imgcodecs.imwrite(prefix + "-cinza.png", cinza);
-		Imgcodecs.imwrite(prefix + "-media.png", media);
-		Imgcodecs.imwrite(prefix + "-cinza-media.png", cinzaMedia);
-		Imgcodecs.imwrite(prefix + "-mediana.png", mediana);
-		Imgcodecs.imwrite(prefix + "-cinza-mediana.png", cinzaMediana);
-		
-//		String prefix = "debian";
-//		
-//		Mat og = Imgcodecs.imread(prefix + ".png");
-//		
-//		Imgcodecs.imwrite(prefix + "-sobel.png", sobel(og, 60));
+		for(Thread thread : threads) {
+			thread.join();
+		}
 		
 		System.out.println("done");
 	}
@@ -47,6 +48,30 @@ public class Convolucao {
 	public static final double R2[][] = {{-1,0,1},{-2,0,2},{-1,0,1}};
 	public static final double black[] = {0,0,0};
 	public static final double white[] = {255,255,255};
+	
+	private static class DoWhatRunnable implements Runnable {
+		private String filename;
+		private Mat img;
+		private What what;
+
+		public DoWhatRunnable(String filename, Mat img, What what) {
+			this.filename = filename;
+			this.img = img;
+			this.what = what;
+		}
+
+		@Override
+		public void run() {
+			Mat result = this.img;
+			for(int i = 0; i < 20; i++) {
+				result = Convolucao.doWhat(img, what);
+			}
+			
+			Imgcodecs.imwrite(filename, result);
+			System.out.println("done " + filename);
+		}
+		
+	}
 	
 	public static Mat doWhat(Mat img, What what) {
 		Mat novo = new Mat(img.rows(), img.cols(), img.type());
