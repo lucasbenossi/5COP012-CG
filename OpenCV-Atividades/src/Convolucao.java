@@ -16,22 +16,40 @@ public class Convolucao {
 		Mat color = Imgcodecs.imread(prefix + ".png");
 		Mat cinza = toGrayscale(color);
 		
-		Thread[] threads = new Thread[5];
-		threads[0] = new Thread(new DoWhatRunnable(prefix + "-color-mean.png", color, What.MEAN));
-		threads[1] = new Thread(new DoWhatRunnable(prefix + "-color-median.png", color, What.MEDIAN));
-		threads[2] = new Thread(new DoWhatRunnable(prefix + "-cinza-mean.png", cinza, What.MEAN));
-		threads[3] = new Thread(new DoWhatRunnable(prefix + "-cinza-median.png", cinza, What.MEDIAN));
-		threads[4] = new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				String prefix = "debian";
-				Mat img = Imgcodecs.imread(prefix + ".png");
-				String filename = prefix + "-sobel.png";
-				Imgcodecs.imwrite(filename, sobel(img, 50));
-				System.out.println("done " + filename);
-			}
-		});
+		Thread[] threads = {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					String prefix = "debian";
+					Mat img = Imgcodecs.imread(prefix + ".png");
+					String filename = prefix + "-sobel.png";
+					Imgcodecs.imwrite(filename, sobel(img, 50));
+					System.out.println("done " + filename);
+				}
+			}),
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					String prefix = "debian";
+					Mat img = Imgcodecs.imread(prefix + ".png");
+					
+					Mat rotacao = Transformacao.rotacao(img, 30);
+					String filename = prefix + "-rotacao.png";
+					Imgcodecs.imwrite(filename, rotacao);
+					System.out.println("done " + filename);
+					
+					Mat mediana = doWhat(rotacao, What.MEDIAN);
+					filename = prefix + "-rotacao-mediana.png";
+					Imgcodecs.imwrite(filename, mediana);
+					System.out.println("done " + filename);
+				}
+			}),
+			new Thread(new DoWhatRunnable(prefix + "-color-mean.png", color, What.MEAN)),
+			new Thread(new DoWhatRunnable(prefix + "-color-median.png", color, What.MEDIAN)),
+			new Thread(new DoWhatRunnable(prefix + "-cinza-mean.png", cinza, What.MEAN)),
+			new Thread(new DoWhatRunnable(prefix + "-cinza-median.png", cinza, What.MEDIAN))
+		};
+		
 		
 		for(Thread thread : threads) {
 			thread.start();
