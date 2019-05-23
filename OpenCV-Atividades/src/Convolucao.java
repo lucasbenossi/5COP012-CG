@@ -5,7 +5,6 @@ import java.util.Comparator;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
 
 public class Convolucao {
 	public static void main(String[] args) throws Exception {
@@ -14,7 +13,7 @@ public class Convolucao {
 		String prefix = "hl2ep2";
 		
 		Mat color = Imgcodecs.imread(prefix + ".png");
-		Mat cinza = toGrayscale(color);
+		Mat cinza = Grayscale.convert(color);
 		
 		Thread[] threads = {
 			new Thread(new Runnable() {
@@ -38,16 +37,16 @@ public class Convolucao {
 					Imgcodecs.imwrite(filename, rotacao);
 					System.out.println("done " + filename);
 					
-					Mat mediana = doWhat(rotacao, What.MEDIAN);
+					Mat mediana = operation(rotacao, Convolucao::median);
 					filename = prefix + "-rotacao-mediana.png";
 					Imgcodecs.imwrite(filename, mediana);
 					System.out.println("done " + filename);
 				}
 			}),
-			new Thread(new DoWhatRunnable(prefix + "-color-mean.png", color, What.MEAN)),
-			new Thread(new DoWhatRunnable(prefix + "-color-median.png", color, What.MEDIAN)),
-			new Thread(new DoWhatRunnable(prefix + "-cinza-mean.png", cinza, What.MEAN)),
-			new Thread(new DoWhatRunnable(prefix + "-cinza-median.png", cinza, What.MEDIAN))
+			new Thread(new DoWhatRunnable(prefix + "-color-mean.png", color, Convolucao::mean)),
+			new Thread(new DoWhatRunnable(prefix + "-color-median.png", color, Convolucao::median)),
+			new Thread(new DoWhatRunnable(prefix + "-cinza-mean.png", cinza, Convolucao::mean)),
+			new Thread(new DoWhatRunnable(prefix + "-cinza-median.png", cinza, Convolucao::median))
 		};
 		
 		
@@ -70,19 +69,19 @@ public class Convolucao {
 	private static class DoWhatRunnable implements Runnable {
 		private String filename;
 		private Mat img;
-		private What what;
+		private Operation operation;
 
-		public DoWhatRunnable(String filename, Mat img, What what) {
+		public DoWhatRunnable(String filename, Mat img, Operation operation) {
 			this.filename = filename;
 			this.img = img;
-			this.what = what;
+			this.operation = operation;
 		}
 
 		@Override
 		public void run() {
 			Mat result = this.img;
 			for(int i = 0; i < 20; i++) {
-				result = Convolucao.doWhat(img, what);
+				result = Convolucao.operation(img, operation);
 			}
 			
 			Imgcodecs.imwrite(filename, result);
@@ -91,7 +90,7 @@ public class Convolucao {
 		
 	}
 	
-	public static Mat doWhat(Mat img, What what) {
+	public static Mat operation(Mat img, Operation operation) {
 		Mat novo = new Mat(img.rows(), img.cols(), img.type());
 		
 		for(int i = 0; i < img.rows(); i++) {
@@ -107,22 +106,19 @@ public class Convolucao {
 					}
 				}
 				
-				if(what.equals(What.MEAN)) {
-					novo.put(i, j, mean(pixels));
-				} else if(what.equals(What.MEDIAN)) {
-					novo.put(i, j, median(pixels));
-				}
+				novo.put(i, j, operation.operation(pixels));
 			}
 		}
 		
 		return novo;
 	}
 	
-	private enum What {
-		MEAN, MEDIAN;
+	@FunctionalInterface
+	private static interface Operation {
+		public double[] operation(ArrayList<double[]> pixels);
 	}
 	
-	public static double[] mean(ArrayList<double[]> pixels) {
+	private static double[] mean(ArrayList<double[]> pixels) {
 		double[] mean = new double[3];
 		int n = pixels.size();
 		
@@ -137,7 +133,7 @@ public class Convolucao {
 		return mean;
 	}
 	
-	public static double[] median(ArrayList<double[]> pixels) {
+	private static double[] median(ArrayList<double[]> pixels) {
 		double[] result = {0, 0, 0};
 		int meio = pixels.size() / 2;
 		
@@ -147,24 +143,6 @@ public class Convolucao {
 		}
 		
 		return result;
-	}
-	
-	public static Mat toGrayscale(Mat img) {
-		Mat hsv = img.clone();
-		Imgproc.cvtColor(img, hsv, Imgproc.COLOR_BGR2HSV);
-		
-		for(int x = 0; x < img.rows(); x++) {
-			for(int y = 0; y < img.cols(); y++) {
-				double[] pixel = hsv.get(x, y);
-				pixel[1] = 0;
-				hsv.put(x, y, pixel);
-			}
-		}
-		
-		Mat bgr = hsv.clone();
-		Imgproc.cvtColor(hsv, bgr, Imgproc.COLOR_HSV2BGR);
-		
-		return bgr;
 	}
 	
 	private static double[] pixelOrNull(Mat img, int i, int j) {
@@ -197,7 +175,7 @@ public class Convolucao {
 	}
 	
 	public static Mat sobel(Mat img, double limiar){
-		Mat novo = toGrayscale(img);
+		Mat novo = Grayscale.convert(img);
 		
 		for(int i = 0; i < img.rows(); i++) {
 			for(int j = 0; j < img.cols(); j++) {
@@ -221,7 +199,7 @@ public class Convolucao {
 		return novo;
 	}
 	
-	public static Mat h(Mat img, int i, int j) {
+	private static Mat h(Mat img, int i, int j) {
 		Mat h = new Mat(3, 3, img.type());
 		
 		for(int k = 0; k < 3; k++) {
@@ -239,7 +217,7 @@ public class Convolucao {
 		return h;
 	}
 	
-	public static double[] r(Mat h, double[][] R) {
+	private static double[] r(Mat h, double[][] R) {
 		double[] sum = {0, 0, 0};
 		
 		for(int i = 0; i < 3; i++){

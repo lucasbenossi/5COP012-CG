@@ -58,7 +58,7 @@ public class Transformacao {
 		return arrayDePixelsParsMat(pixels, img);
 	}
 	
-	public static Pixel transformacao(double[][] matriz, Pixel pixel) {
+	private static Pixel transformacao(double[][] matriz, Pixel pixel) {
         double[] vec3 = {pixel.x, pixel.y, 1};
         double[] vec2 = {pixel.x, pixel.y};
         double[] result;
@@ -88,7 +88,7 @@ public class Transformacao {
         return result;
     }
 	
-	public static double[][] matrizIdentidade() {
+	private static double[][] matrizIdentidade() {
 		double[][] matriz = new double[3][];
 		for(int i = 0; i < 3; i++) {
 			matriz[i] = new double[3];
@@ -102,7 +102,7 @@ public class Transformacao {
 		return matriz;
 	}
 	
-	public static double[][] matrizRotacao(double angulo) {
+	private static double[][] matrizRotacao(double angulo) {
         double[][] matriz = matrizIdentidade();
 
         matriz[0][0] = Math.cos(angulo);
@@ -113,7 +113,7 @@ public class Transformacao {
         return matriz;
     }
 	
-	public static double[][] matrizTranslacao(int dx, int dy) {
+	private static double[][] matrizTranslacao(int dx, int dy) {
         double[][] mat = matrizIdentidade();
 
         mat[0][2] = dx;
@@ -122,7 +122,7 @@ public class Transformacao {
         return mat;
     }
 	
-	public static ArrayList<Pixel> matParaArrayDePixels(Mat img){
+	private static ArrayList<Pixel> matParaArrayDePixels(Mat img){
 		ArrayList<Pixel> pixels = new ArrayList<Pixel>();
 		
 		for(int i = 0; i < img.rows(); i++) {
@@ -134,7 +134,7 @@ public class Transformacao {
 		return pixels;
 	}
 	
-	public static Mat arrayDePixelsParsMat(ArrayList<Pixel> pixels, Mat original) {
+	private static Mat arrayDePixelsParsMat(ArrayList<Pixel> pixels, Mat original) {
 		Mat novo = new Mat(original.rows(), original.cols(), original.type());
 		
 		for(int i = 0; i < original.rows(); i++) {

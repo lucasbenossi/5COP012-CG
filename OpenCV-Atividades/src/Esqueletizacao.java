@@ -86,7 +86,8 @@ public class Esqueletizacao {
         return dilate(erosion(img));
     }
 
-    private static Mat closing(Mat img) {
+    @SuppressWarnings("unused")
+	private static Mat closing(Mat img) {
         return erosion(dilate(img));
     }
     
@@ -110,6 +111,7 @@ public class Esqueletizacao {
         return true;
     }
 	
+	@SuppressWarnings("unused")
 	private static Mat and(Mat a, Mat b) {
 		Mat result = new Mat(a.rows(), a.cols(), a.type());
 		for (int i = 0; i < a.rows(); i++) {
@@ -142,6 +144,7 @@ public class Esqueletizacao {
 		return result;
 	}
 	
+	@SuppressWarnings("unused")
 	private static Mat complement(Mat a) {
 		Mat result = new Mat(a.rows(), a.cols(), a.type());
 		for (int i = 0; i < a.rows(); i++) {

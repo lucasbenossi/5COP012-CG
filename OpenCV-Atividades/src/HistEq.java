@@ -56,7 +56,7 @@ public class HistEq {
 		return eq;
 	}
 	
-	public static void eqChannel(Mat img, int channel) {
+	private static void eqChannel(Mat img, int channel) {
 		int H[] = new int[256];
 		for(int i = 0; i < H.length; i++) {
 			H[i] = 0;
