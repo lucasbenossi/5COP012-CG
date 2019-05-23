@@ -2,53 +2,22 @@
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
 
 public class Convolucao {
 	public static void main(String[] args) throws Exception {
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		
-		String prefix = "hl2ep2";
-		
-		Mat color = Imgcodecs.imread(prefix + ".png");
-		Mat cinza = Grayscale.convert(color);
+		Imagem hl2ep2Color = Imagem.load("hl2ep2");
+		Imagem hl2ep2Grayscale = hl2ep2Color.grayscale();
+		Imagem debian = Imagem.load("debian");
 		
 		Thread[] threads = {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					String prefix = "debian";
-					Mat img = Imgcodecs.imread(prefix + ".png");
-					String filename = prefix + "-sobel.png";
-					Imgcodecs.imwrite(filename, sobel(img, 50));
-					System.out.println("done " + filename);
-				}
-			}),
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					String prefix = "debian";
-					Mat img = Imgcodecs.imread(prefix + ".png");
-					
-					Mat rotacao = Transformacao.rotacao(img, 30);
-					String filename = prefix + "-rotacao.png";
-					Imgcodecs.imwrite(filename, rotacao);
-					System.out.println("done " + filename);
-					
-					Mat mediana = operation(rotacao, Convolucao::median);
-					filename = prefix + "-rotacao-mediana.png";
-					Imgcodecs.imwrite(filename, mediana);
-					System.out.println("done " + filename);
-				}
-			}),
-			new Thread(new DoWhatRunnable(prefix + "-color-mean.png", color, Convolucao::mean)),
-			new Thread(new DoWhatRunnable(prefix + "-color-median.png", color, Convolucao::median)),
-			new Thread(new DoWhatRunnable(prefix + "-cinza-mean.png", cinza, Convolucao::mean)),
-			new Thread(new DoWhatRunnable(prefix + "-cinza-median.png", cinza, Convolucao::median))
+			new Thread( () -> debian.rotacao(30).median().save() ),
+			new Thread( () -> debian.sobel(50).save() ),
+			new Thread( () -> hl2ep2Color.mean().save() ),
+			new Thread( () -> hl2ep2Color.median().save() ),
+			new Thread( () -> hl2ep2Grayscale.mean().save() ),	
+			new Thread( () -> hl2ep2Grayscale.median().save() )
 		};
-		
 		
 		for(Thread thread : threads) {
 			thread.start();
@@ -65,30 +34,6 @@ public class Convolucao {
 	public static final double R2[][] = {{-1,0,1},{-2,0,2},{-1,0,1}};
 	public static final double black[] = {0,0,0};
 	public static final double white[] = {255,255,255};
-	
-	private static class DoWhatRunnable implements Runnable {
-		private String filename;
-		private Mat img;
-		private Operation operation;
-
-		public DoWhatRunnable(String filename, Mat img, Operation operation) {
-			this.filename = filename;
-			this.img = img;
-			this.operation = operation;
-		}
-
-		@Override
-		public void run() {
-			Mat result = this.img;
-			for(int i = 0; i < 20; i++) {
-				result = Convolucao.operation(img, operation);
-			}
-			
-			Imgcodecs.imwrite(filename, result);
-			System.out.println("done " + filename);
-		}
-		
-	}
 	
 	public static Mat operation(Mat img, Operation operation) {
 		Mat novo = new Mat(img.rows(), img.cols(), img.type());
@@ -114,11 +59,11 @@ public class Convolucao {
 	}
 	
 	@FunctionalInterface
-	private static interface Operation {
+	public static interface Operation {
 		public double[] operation(ArrayList<double[]> pixels);
 	}
 	
-	private static double[] mean(ArrayList<double[]> pixels) {
+	public static double[] mean(ArrayList<double[]> pixels) {
 		double[] mean = new double[3];
 		int n = pixels.size();
 		
@@ -133,7 +78,7 @@ public class Convolucao {
 		return mean;
 	}
 	
-	private static double[] median(ArrayList<double[]> pixels) {
+	public static double[] median(ArrayList<double[]> pixels) {
 		double[] result = {0, 0, 0};
 		int meio = pixels.size() / 2;
 		
