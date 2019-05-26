@@ -1,4 +1,3 @@
-package Preenchimento;
 
 import java.util.Scanner;
 
@@ -7,11 +6,11 @@ import org.opencv.core.Mat;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 
-public class Preencimento {
+public class Preencimento2 {
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-		Mat img = Imgcodecs.imread("imagem.png");
+		Mat img = Imgcodecs.imread("image.png");
 		HighGui.imshow("img_original", img);
 		//  B	 G	  R
 		//65.0 158.0 247.0 -> orelha laranjinha
