@@ -59,25 +59,24 @@ public class Transformacao {
 		return pixels.toMat();
 	}
 	
-	private static Pixel transformacao(double[][] matriz, Pixel pixel) {
-        double[] vec3 = {pixel.i, pixel.j, 1};
-        double[] vec2 = {pixel.i, pixel.j};
+	private static void transformacao(double[][] matriz, Pixel pixel) {
         double[] result;
 
         if (matriz.length == 2) {
-            result = multiplica(vec2, matriz);
+        	double[] vec = {pixel.i, pixel.j};
+            result = multiplica(vec, matriz);
         } else {
-            result = multiplica(vec3, matriz);
+        	double[] vec = {pixel.i, pixel.j, 1};
+            result = multiplica(vec, matriz);
         }
 
         pixel.i = result[0];
         pixel.j = result[1];
-
-        return pixel;
     }
 	
 	private static double[] multiplica(double[] vetor, double[][] matriz) {
         double[] result = new double[vetor.length];
+        
         for (int i = 0; i < vetor.length; i++) {
             double sum = 0;
             for (int j = 0; j < vetor.length; j++) {
