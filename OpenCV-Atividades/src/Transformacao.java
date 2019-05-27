@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import org.opencv.core.Core;
@@ -30,18 +31,18 @@ public class Transformacao {
 	}
 	
 	public static Mat translacao(Mat img, int dx, int dy) {
-		ArrayList<Pixel> pixels = matParaArrayDePixels(img);
+		PixelArray pixels = new PixelArray(img);
 		
 		double[][] matrizTranslacao = matrizTranslacao(dx, dy);
 		for(Pixel pixel : pixels) {
 			transformacao(matrizTranslacao, pixel);
 		}
 		
-		return arrayDePixelsParsMat(pixels, img);
+		return pixels.toMat();
 	}
 	
 	public static Mat rotacao(Mat img, double angulo) {
-		ArrayList<Pixel> pixels = matParaArrayDePixels(img);
+		PixelArray pixels = new PixelArray(img);
 		
 		angulo = Math.toRadians(angulo);
 
@@ -55,12 +56,12 @@ public class Transformacao {
             transformacao(translateBack, pixel);
         }
 		
-		return arrayDePixelsParsMat(pixels, img);
+		return pixels.toMat();
 	}
 	
 	private static Pixel transformacao(double[][] matriz, Pixel pixel) {
-        double[] vec3 = {pixel.x, pixel.y, 1};
-        double[] vec2 = {pixel.x, pixel.y};
+        double[] vec3 = {pixel.i, pixel.j, 1};
+        double[] vec2 = {pixel.i, pixel.j};
         double[] result;
 
         if (matriz.length == 2) {
@@ -69,8 +70,8 @@ public class Transformacao {
             result = multiplica(vec3, matriz);
         }
 
-        pixel.x = result[0];
-        pixel.y = result[1];
+        pixel.i = result[0];
+        pixel.j = result[1];
 
         return pixel;
     }
@@ -122,45 +123,47 @@ public class Transformacao {
         return mat;
     }
 	
-	private static ArrayList<Pixel> matParaArrayDePixels(Mat img){
-		ArrayList<Pixel> pixels = new ArrayList<Pixel>();
-		
-		for(int i = 0; i < img.rows(); i++) {
-			for(int j = 0; j < img.cols(); j++) {
-				pixels.add(new Pixel(i, j, img.get(i, j)));
-			}
-		}
-		
-		return pixels;
-	}
-	
-	private static Mat arrayDePixelsParsMat(ArrayList<Pixel> pixels, Mat original) {
-		Mat novo = new Mat(original.rows(), original.cols(), original.type());
-		
-		for(int i = 0; i < original.rows(); i++) {
-			for(int j = 0; j < original.cols(); j++) {
-				double[] rgb = {0, 0, 0};
-				novo.put(i, j, rgb);
-			}
-		}
-		
-		for(Pixel pixel : pixels) {
-			if(pixel.x >= 0 && pixel.x < original.rows() && pixel.y >= 0 && pixel.y < original.cols()) {
-				novo.put((int) pixel.x, (int) pixel.y, pixel.rgb);
-			}
-		}
-		
-		return novo;
-	}
-	
 	private static class Pixel {
-		double x, y;
+		double i, j;
 		double[] rgb;
 		
-		public Pixel(double x, double y, double[] rgb) {
-			this.x = x;
-			this.y = y;
+		public Pixel(double i, double j, double[] rgb) {
+			this.i = i;
+			this.j = j;
 			this.rgb = rgb;
+		}
+	}
+	
+	private static class PixelArray implements Iterable<Pixel> {
+		private Mat img;
+		private ArrayList<Pixel> pixels;
+		
+		public PixelArray(Mat img) {
+			this.img = img;
+			this.pixels = new ArrayList<>(img.rows() * img.cols());
+			
+			for(int i = 0; i < img.rows(); i++) {
+				for(int j = 0; j < img.cols(); j++) {
+					pixels.add(new Pixel(i, j, img.get(i, j)));
+				}
+			}
+		}
+		
+		public Mat toMat() {
+			Mat mat = Utils.createBlackImg(this.img.rows(), this.img.cols(), this.img.type());
+			
+			for(Pixel pixel : this.pixels) {
+				if(pixel.i >= 0 && pixel.i < this.img.rows() && pixel.j >= 0 && pixel.j < this.img.cols()) {
+					mat.put((int) pixel.i, (int) pixel.j, pixel.rgb);
+				}
+			}
+			
+			return mat;
+		}
+
+		@Override
+		public Iterator<Pixel> iterator() {
+			return this.pixels.iterator();
 		}
 	}
 }

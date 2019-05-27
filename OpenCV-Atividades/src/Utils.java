@@ -19,4 +19,17 @@ public class Utils {
 		
 		return true;
 	}
+	
+	public static Mat createBlackImg(int rows, int cols, int type) {
+		Mat mat = new Mat(rows, cols, type);
+		double[] black = {0, 0, 0};
+		
+		for(int i = 0; i < rows; i++) {
+			for(int j = 0; j < cols; j++) {
+				mat.put(i, j, black);
+			}
+		}
+		
+		return mat;
+	}
 }
