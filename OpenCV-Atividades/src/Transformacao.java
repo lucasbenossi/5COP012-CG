@@ -9,7 +9,7 @@ public class Transformacao {
 		
 		double[][] matrizTranslacao = matrizTranslacao(dx, dy);
 		for(Pixel pixel : pixels) {
-			transformacao(matrizTranslacao, pixel);
+			pixel.transforma(matrizTranslacao);
 		}
 		
 		return pixels.toMat();
@@ -25,42 +25,54 @@ public class Transformacao {
         double[][] translateBack = matrizTranslacao(img.rows() / 2, img.cols() / 2);
 
         for (Pixel pixel : pixels) {
-            transformacao(translateOrigin, pixel);
-            transformacao(rotationMatrix, pixel);
-            transformacao(translateBack, pixel);
+            pixel.transforma(translateOrigin);
+            pixel.transforma(rotationMatrix);
+            pixel.transforma(translateBack);
         }
 		
 		return pixels.toMat();
 	}
 	
-	private static void transformacao(double[][] matriz, Pixel pixel) {
-        double[] result;
-
-        if (matriz.length == 2) {
-        	double[] vec = {pixel.i, pixel.j};
-            result = multiplica(vec, matriz);
-        } else {
-        	double[] vec = {pixel.i, pixel.j, 1};
-            result = multiplica(vec, matriz);
-        }
-
-        pixel.i = result[0];
-        pixel.j = result[1];
-    }
+	public static Mat escala(Mat img, double sx, double sy) {
+		PixelArray pixels = new PixelArray(img);
+		
+		double[][] matriz = matrizEscala(sx, sy);
+		for(Pixel pixel : pixels) {
+			pixel.transforma(matriz);
+		}
+		
+		return pixels.toMat();
+	}
 	
-	private static double[] multiplica(double[] vetor, double[][] matriz) {
-        double[] result = new double[vetor.length];
-        
-        for (int i = 0; i < vetor.length; i++) {
-            double sum = 0;
-            for (int j = 0; j < vetor.length; j++) {
-                sum += vetor[j] * matriz[i][j];
-            }
-            result[i] = sum;
-        }
-
-        return result;
-    }
+	private static double[] multiplica(double[][] matriz, double[] vetor) {
+		double[] result = new double[vetor.length];
+		
+		for(int i = 0; i < vetor.length; i++) {
+			result[i] = 0;
+			for(int k = 0; k < vetor.length; k++) {
+				result[i] += matriz[i][k] * vetor[k];
+			}
+		}
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unused")
+	private static double[][] multiplica(double[][] a, double[][] b) {
+		double[][] result = new double[a.length][];
+		
+		for(int i = 0; i < result.length; i++) {
+			result[i] = new double[b[0].length];
+			for(int j = 0; j < result[i].length; j++) {
+				result[i][j] = 0;
+				for(int k = 0; k < b.length; k++) {
+					result[i][j] += a[i][k] * b[k][j];
+				}
+			}
+		}
+		
+		return result;
+	}
 	
 	private static double[][] matrizIdentidade() {
 		double[][] matriz = new double[3][];
@@ -96,6 +108,15 @@ public class Transformacao {
         return mat;
     }
 	
+	private static double[][] matrizEscala(double sx, double sy) {
+		double[][] mat = matrizIdentidade();
+		
+		mat[0][0] = sx;
+		mat[1][1] = sy;
+		
+		return mat;
+	}
+	
 	private static class Pixel {
 		double i, j;
 		double[] rgb;
@@ -104,6 +125,14 @@ public class Transformacao {
 			this.i = i;
 			this.j = j;
 			this.rgb = rgb;
+		}
+		
+		public void transforma(double[][] matriz) {
+			double[] vec = {this.i, this.j, 1};
+	        double[] result = multiplica(matriz, vec);
+
+	        this.i = result[0];
+	        this.j = result[1];
 		}
 	}
 	

@@ -73,6 +73,10 @@ public class Imagem {
 		return new Imagem(this.name + "-translacao", Transformacao.translacao(this.mat, dx, dy));
 	}
 	
+	public Imagem escala(double sx, double sy) {
+		return new Imagem(this.name + "-escala", Transformacao.escala(this.mat, sx, sy));
+	}
+	
 	public Imagem zoomInQuadrado() {
 		return new Imagem(this.name + "-zoomInQuadrado", Zoom.zoomInQuadrado(this.mat));
 	}
