@@ -1,35 +1,9 @@
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Scanner;
 
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
 
 public class Transformacao {
-	public static void main(String[] args) {
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		
-		try (Scanner scan = new Scanner(System.in);) {
-			Mat img = Imgcodecs.imread("hl2ep2.png");
-			
-			System.out.print("angulo: ");
-			double angulo = scan.nextInt();
-			scan.nextLine();
-			System.out.print("dx: ");
-			int dx = scan.nextInt();
-			scan.nextLine();
-			System.out.print("dy: ");
-			int dy = scan.nextInt();
-			scan.nextLine();
-			
-			Imgcodecs.imwrite("hl2ep2-rotacao.png", rotacao(img, angulo));
-			Imgcodecs.imwrite("hl2ep2-translacao.png", translacao(img, dx, dy));
-			
-			System.out.println("done");
-		}
-	}
-	
 	public static Mat translacao(Mat img, int dx, int dy) {
 		PixelArray pixels = new PixelArray(img);
 		

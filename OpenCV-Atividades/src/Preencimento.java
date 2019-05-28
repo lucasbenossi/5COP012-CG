@@ -2,24 +2,21 @@
 import org.opencv.core.Mat;
 
 public class Preencimento {
-	public static Mat preencher(Mat img, int i, int j, double[] novo, double limiar) {
+	public static Mat preencher(Mat img, int i, int j, double[] cor, double limiar) {
 		Mat clone = img.clone();
-		preencherRecursivo(clone, i, j, clone.get(i, j), novo, limiar);
+		preencherRecursivo(clone, i, j, clone.get(i, j), cor, limiar);
 		return clone;
 	}
-	
-	private static void preencherRecursivo(Mat img, int i, int j, double[] inicial, double[] novo, double limiar) {
+
+	public static void preencherRecursivo(Mat img, int i, int j, double[] inicial, double[] cor, double limiar) {
 		double[] pixel = Utils.pixelOrNull(img, i, j);
-		if(pixel == null) {
-			return;
-		}
 		
-		if(!Utils.isEqual(pixel, novo) && estaNoLimiar(pixel, inicial, limiar)) {
-			img.put(i, j, novo);
-			preencherRecursivo(img, i, j-1, inicial, novo, limiar);
-			preencherRecursivo(img, i, j+1, inicial, novo, limiar);
-			preencherRecursivo(img, i-1, j, inicial, novo, limiar);
-			preencherRecursivo(img, i+1, j, inicial, novo, limiar);
+		if(pixel != null && !Utils.isEqual(pixel, cor) && estaNoLimiar(pixel, inicial, limiar)) {
+			img.put(i, j, cor);
+			preencherRecursivo(img, i, j-1, inicial, cor, limiar);
+			preencherRecursivo(img, i, j+1, inicial, cor, limiar);
+			preencherRecursivo(img, i-1, j, inicial, cor, limiar);
+			preencherRecursivo(img, i+1, j, inicial, cor, limiar);
 		}
 	}
 	

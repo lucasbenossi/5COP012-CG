@@ -1,6 +1,4 @@
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
 
 public class Esqueletizacao {
 	
@@ -8,16 +6,6 @@ public class Esqueletizacao {
 	private static final double[] white = {255, 255, 255};
 	private static final boolean[][] estruturante = {{false, true, false}, {true, true, true}, {false, true, false}};
     private static final int range = 3;
-    
-    public static void main(String[] args) {
-    	System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-    	
-    	Mat og = Imgcodecs.imread("debian.png");
-    	
-    	Imgcodecs.imwrite("debian2.png", lantuejoul(og));
-    	
-    	System.out.println("done");
-    }
     
     public static Mat lantuejoul(Mat img) {
     	Mat result = new Mat(img.rows(), img.cols(), img.type());

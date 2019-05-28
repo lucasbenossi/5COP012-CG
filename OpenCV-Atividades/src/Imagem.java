@@ -90,6 +90,6 @@ public class Imagem {
 	}
 	
 	public Imagem invert() {
-		return new Imagem(this.name + "-invert", Zoom.invert(this.mat));
+		return new Imagem(this.name + "-invert", Invert.invert(this.mat));
 	}
 }

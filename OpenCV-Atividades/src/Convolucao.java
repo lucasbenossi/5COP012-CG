@@ -5,31 +5,6 @@ import java.util.Comparator;
 import org.opencv.core.Mat;
 
 public class Convolucao {
-	public static void main(String[] args) throws Exception {
-		Imagem hl2ep2Color = Imagem.load("hl2ep2");
-		Imagem hl2ep2Grayscale = hl2ep2Color.grayscale();
-		Imagem debian = Imagem.load("debian");
-		
-		Thread[] threads = {
-			new Thread( () -> debian.rotacao(30).median().save() ),
-			new Thread( () -> debian.sobel(50).save() ),
-			new Thread( () -> hl2ep2Color.mean().save() ),
-			new Thread( () -> hl2ep2Color.median().save() ),
-			new Thread( () -> hl2ep2Grayscale.mean().save() ),	
-			new Thread( () -> hl2ep2Grayscale.median().save() )
-		};
-		
-		for(Thread thread : threads) {
-			thread.start();
-		}
-		
-		for(Thread thread : threads) {
-			thread.join();
-		}
-		
-		System.out.println("done");
-	}
-	
 	public static final double R1[][] = {{-1,-2,-1},{0,0,0},{1,2,1}};
 	public static final double R2[][] = {{-1,0,1},{-2,0,2},{-1,0,1}};
 	public static final double black[] = {0,0,0};

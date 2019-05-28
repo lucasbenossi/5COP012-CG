@@ -1,24 +1,7 @@
 
-
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
 
 public class Zoom {
-	public static void main(String[] args) {
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		
-		Mat og = Imgcodecs.imread("image.png");
-		
-		Imgcodecs.imwrite("image-zoom-in-quadrado.png", zoomInQuadrado(og));
-		Imgcodecs.imwrite("image-zoom-in-linear.png", zoomInLinear(og));
-		Imgcodecs.imwrite("image-zoom-out-quadrado.png", zoomOutQuadrado(og));
-		Imgcodecs.imwrite("image-zoom-out-linear.png", zoomOutLinear(og));
-		Imgcodecs.imwrite("image-inverted.png", invert(og));
-		
-		System.out.println("done");
-	}
-	
 	public static Mat zoomInQuadrado(Mat og) {
 		int rows = og.rows();
 		int cols = og.cols();
@@ -104,29 +87,8 @@ public class Zoom {
 		
 		return zoomed;
 	}
-    
-    public static Mat invert(Mat og) {
-    	int rows = og.rows();
-    	int cols = og.cols();
-    	
-    	Mat inverted = new Mat(rows, cols, og.type());
-    	
-    	for(int i = 0; i < rows; i++) {
-    		for(int j = 0; j < cols; j++) {
-    			double[] pixel = og.get(i, j);
-    			
-    			for (int k = 0; k < 3; k++) {
-    	    		pixel[k] = 255 - pixel[k];
-    	    	}
-    			
-    			inverted.put(i, j, pixel);
-    		}
-    	}
-    	
-    	return inverted;
-    }
 	
-	public static double[] mean(double[]... values) {
+	private static double[] mean(double[]... values) {
     	double sum[] = new double[3];
     	double mean[] = new double[3];
     	
