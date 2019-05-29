@@ -25,21 +25,21 @@ public class PreenchimentoJanela {
 		Mat original = imagem.getMat();
 		mat = original.clone();
 
-		JLabel labelR = new JLabel("R: ");
+		JLabel labelR = new JLabel("R:");
 		JTextField textR = new JTextField(3);
-		JLabel labelG = new JLabel("G: ");
+		JLabel labelG = new JLabel("G:");
 		JTextField textG = new JTextField(3);
-		JLabel labelB = new JLabel("B: ");
+		JLabel labelB = new JLabel("B:");
 		JTextField textB = new JTextField(3);
-		JLabel labelLimiar = new JLabel("Limiar: ");
+		JLabel labelLimiar = new JLabel("Limiar:");
 		JTextField textLimiar = new JTextField(3);
 		JButton resetButton = new JButton("reset");
 
-		JLabel thumb = new JLabel();
-		thumb.setIcon(new ImageIcon(matToBufferedImage(mat)));
+		JLabel display = new JLabel();
+		display.setIcon(new ImageIcon(matToBufferedImage(mat)));
 
 		JPanel seletor = new JPanel();
-		seletor.add(thumb);
+		seletor.add(display);
 		seletor.add(labelR);
 		seletor.add(textR);
 		seletor.add(labelG);
@@ -51,7 +51,7 @@ public class PreenchimentoJanela {
 		seletor.add(resetButton);
 		seletor.setLayout(new BoxLayout(seletor, BoxLayout.Y_AXIS));
 
-		thumb.addMouseListener(new MouseAdapter() {
+		display.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent event) {
 
 				int x = event.getX();
@@ -66,7 +66,7 @@ public class PreenchimentoJanela {
 				
 				Preencimento.preencherRecursivo(mat, y, x, mat.get(y, x), bgr, limiar);
 				
-				thumb.setIcon(new ImageIcon(matToBufferedImage(mat)));
+				display.setIcon(new ImageIcon(matToBufferedImage(mat)));
 			}
 		});
 		
@@ -74,13 +74,13 @@ public class PreenchimentoJanela {
 			@Override
 			public void mouseClicked(MouseEvent event) {
 				mat = original.clone();
-				thumb.setIcon(new ImageIcon(matToBufferedImage(mat)));
+				display.setIcon(new ImageIcon(matToBufferedImage(mat)));
 			}
 			
 		});
 		
 		JPanel painel = new JPanel();
-		painel.add(thumb);
+		painel.add(display);
 		painel.add(seletor);
 
 		JFrame frame = new JFrame("Preenchimento");
