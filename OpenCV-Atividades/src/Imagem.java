@@ -1,3 +1,7 @@
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -7,7 +11,7 @@ public class Imagem {
 	private String name;
 	
 	
-	private Imagem(String name, Mat img) {
+	public Imagem(String name, Mat img) {
 		this.mat = img;
 		this.name = name;
 	}
@@ -19,6 +23,17 @@ public class Imagem {
 	
 	public void save() {
 		Imgcodecs.imwrite(this.name + ".png", this.mat);
+	}
+	
+	public void show() {
+		JLabel display = new JLabel();
+		display.setIcon(new ImageIcon(Utils.matToBufferedImage(this.mat)));
+		
+		JFrame frame = new JFrame();
+		frame.add(display);
+		frame.pack();
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	public Mat getMat() {

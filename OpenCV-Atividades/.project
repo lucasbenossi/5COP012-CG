@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>mXparser</name>
+			<type>2</type>
+			<location>/home/lucas/Desktop/MathParser.org-mXparser-v.4.2.0/java/src</location>
+		</link>
+	</linkedResources>
 </projectDescription>

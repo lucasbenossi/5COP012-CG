@@ -1,8 +1,6 @@
 
-import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.swing.BoxLayout;
@@ -36,7 +34,7 @@ public class PreenchimentoJanela {
 		JButton resetButton = new JButton("reset");
 
 		JLabel display = new JLabel();
-		display.setIcon(new ImageIcon(matToBufferedImage(mat)));
+		display.setIcon(new ImageIcon(Utils.matToBufferedImage(mat)));
 
 		JPanel seletor = new JPanel();
 		seletor.add(display);
@@ -66,7 +64,7 @@ public class PreenchimentoJanela {
 				
 				Preencimento.preencherRecursivo(mat, y, x, mat.get(y, x), bgr, limiar);
 				
-				display.setIcon(new ImageIcon(matToBufferedImage(mat)));
+				display.setIcon(new ImageIcon(Utils.matToBufferedImage(mat)));
 			}
 		});
 		
@@ -74,7 +72,7 @@ public class PreenchimentoJanela {
 			@Override
 			public void mouseClicked(MouseEvent event) {
 				mat = original.clone();
-				display.setIcon(new ImageIcon(matToBufferedImage(mat)));
+				display.setIcon(new ImageIcon(Utils.matToBufferedImage(mat)));
 			}
 			
 		});
@@ -89,17 +87,6 @@ public class PreenchimentoJanela {
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-	}
-	
-	private static BufferedImage matToBufferedImage(Mat mat) {
-		BufferedImage img = new BufferedImage(mat.cols(), mat.rows(), BufferedImage.TYPE_INT_RGB);
-		for(int i = 0; i < mat.rows(); i++) {
-			for(int j = 0; j < mat.cols(); j++) {
-				double[] pixel = mat.get(i, j);
-				img.setRGB(j, i, new Color((int) pixel[2], (int) pixel[1], (int) pixel[0]).getRGB());
-			}
-		}
-		return img;
 	}
 
 }

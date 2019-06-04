@@ -3,13 +3,13 @@ import org.opencv.core.Mat;
 public class Esqueletizacao {
 	
 	private static final double[] black = {0, 0, 0};
-	private static final double[] white = {255, 255, 255};
+	static final double[] white = {255, 255, 255};
 	private static final boolean[][] estruturante = {{false, true, false}, {true, true, true}, {false, true, false}};
     private static final int range = 3;
     
     public static Mat lantuejoul(Mat img) {
     	Mat result = new Mat(img.rows(), img.cols(), img.type());
-        fillWhite(result);
+        Utils.fillWhite(result);
 
         Mat corroded = img.clone();
 
@@ -23,7 +23,7 @@ public class Esqueletizacao {
     
     private static Mat erosion(Mat img) {
         Mat result = new Mat(img.rows(), img.cols(), img.type());
-        fillWhite(result);
+        Utils.fillWhite(result);
         for (int i = 1; i < img.rows() - 1; i++) {
             for (int j = 1; j < img.cols() - 1; j++) {
                 double[] centro = img.get(i, j);
@@ -50,7 +50,7 @@ public class Esqueletizacao {
     
     private static Mat dilate(Mat img) {
         Mat result = new Mat(img.rows(), img.cols(), img.type());
-        fillWhite(result);
+        Utils.fillWhite(result);
         for (int i = 1; i < img.rows() - 1; i++) {
             for (int j = 1; j < img.cols() - 1; j++) {
                 double[] centro = img.get(i, j);
@@ -78,15 +78,6 @@ public class Esqueletizacao {
 	private static Mat closing(Mat img) {
         return erosion(dilate(img));
     }
-    
-    private static void fillWhite(Mat mat) {
-        for (int i = 0; i < mat.rows(); i++) {
-            for (int j = 0; j < mat.cols(); j++) {
-                mat.put(i, j, white);
-            }
-        }
-    }
-
     
     private static boolean isFullWhite(Mat mat) {
         for (int i = 0; i < mat.rows(); i++) {
