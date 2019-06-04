@@ -11,33 +11,53 @@ import org.mariuszgromada.math.mxparser.Function;
 
 public class Plot {
 	public static void plot() {
-		int width, height;
-		Function function;
+		int rows = 500;
+		int cols = 500;
+		Function function = new Function("f(x) = sen(x)");
+
+		double hViewLo = -1;
+		double hViewHi = 1;
+		double vViewLo = -1;
+		double vViewHi = 1;
 		
-		try(Scanner scan = new Scanner(System.in);) {
-			System.out.print("Width: ");
-			width = scan.nextInt();
-			scan.nextLine();
-			
-			System.out.print("Height: ");
-			height = scan.nextInt();
-			scan.nextLine();
-			
-//			System.out.print("Function: ");
-//			function = new Function(scan.nextLine().trim());
-		}
+		double iSteps = (vViewHi - vViewLo) / rows;
+		double jSteps = (hViewHi - hViewLo) / cols;
 		
-//		System.out.println(new Expression("f(3)", function).calculate());
+		BufferedImage screen = new BufferedImage(cols, rows, BufferedImage.TYPE_INT_RGB);
 		
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		
-		for(int x = 0; x < width; x++) {
-			for(int y = 0; y < height; y++) {
-				image.setRGB(x, y, Color.WHITE.getRGB());
+		for(int x = 0; x < cols; x++) {
+			for(int y = 0; y < rows; y++) {
+				screen.setRGB(x, y, Color.WHITE.getRGB());
 			}
 		}
 		
-		JLabel display = new JLabel(new ImageIcon(image));
+		int j = (int) ((0 - hViewLo) / jSteps);
+		if(j >= 0 && j < cols){
+			for(int i = 0; i < rows; i++){
+				screen.setRGB(j, i, Color.BLACK.getRGB());
+			}
+		}
+		
+		int i = (int) ((0 - vViewLo) / iSteps);
+		if(i >= 0 && i < rows){
+			for(j = 0; j < cols; j++){
+				screen.setRGB(j, i, Color.BLACK.getRGB());
+			}
+		}
+		
+		for(j = 0; j < cols; j++){
+			double x = j * jSteps + hViewLo;
+			double y = new Expression("f("+x+")", function).calculate();
+			i = (int) (rows - (y - vViewLo) / iSteps);
+			if(i >= 0 && i < rows){
+//				System.out.println(i + " " + j);
+				screen.setRGB(j, i, Color.BLACK.getRGB());
+			}
+		}
+		
+		
+		
+		JLabel display = new JLabel(new ImageIcon(screen));
 		
 		JFrame frame = new JFrame();
 		frame.add(display);
