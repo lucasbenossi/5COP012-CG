@@ -7,8 +7,6 @@ import org.opencv.core.Mat;
 public class Convolucao {
 	public static final double R1[][] = {{-1,-2,-1},{0,0,0},{1,2,1}};
 	public static final double R2[][] = {{-1,0,1},{-2,0,2},{-1,0,1}};
-	public static final double black[] = {0,0,0};
-	public static final double white[] = {255,255,255};
 	
 	public static Mat operation(Mat img, Operation operation) {
 		Mat novo = new Mat(img.rows(), img.cols(), img.type());
@@ -101,9 +99,9 @@ public class Convolucao {
 				double mean = (result[0] + result[1] + result[2]) / 3;
 				
 				if(mean > limiar) {
-					novo.put(i, j, black);
+					novo.put(i, j, Pixel.BLACK);
 				} else{
-					novo.put(i, j, white);
+					novo.put(i, j, Pixel.WHITE);
 				}
 			}
 		}
@@ -120,7 +118,7 @@ public class Convolucao {
 				if(pixel != null) {
 					h.put(k, l, pixel);
 				} else {
-					h.put(k, l, black);
+					h.put(k, l, Pixel.BLACK);
 				}
 			}
 		}

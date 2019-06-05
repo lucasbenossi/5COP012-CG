@@ -1,5 +1,8 @@
 
 class Pixel {
+	public static double[] BLACK = {0, 0, 0};
+	public static double[] WHITE = {255, 255, 255};
+	
 	double i, j;
 	double[] bgr;
 	

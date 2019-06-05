@@ -24,19 +24,17 @@ public class Utils {
 	}
 	
 	public static void paintItBlack(Mat mat) {
-		double[] black = {0, 0, 0};
 		for(int i = 0; i < mat.rows(); i++) {
 			for(int j = 0; j < mat.cols(); j++) {
-				mat.put(i, j, black);
+				mat.put(i, j, Pixel.BLACK);
 			}
 		}
 	}
 
 	public static void paintItWhite(Mat mat) {
-		double[] white = {255, 255, 255};
 	    for (int i = 0; i < mat.rows(); i++) {
 	        for (int j = 0; j < mat.cols(); j++) {
-	            mat.put(i, j, white);
+	            mat.put(i, j, Pixel.WHITE);
 	        }
 	    }
 	}
