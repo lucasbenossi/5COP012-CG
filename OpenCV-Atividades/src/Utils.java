@@ -26,7 +26,7 @@ public class Utils {
 	public static void paintItBlack(Mat mat) {
 		for(int i = 0; i < mat.rows(); i++) {
 			for(int j = 0; j < mat.cols(); j++) {
-				mat.put(i, j, Pixel.BLACK);
+				mat.put(i, j, Pixel.bgrBlack);
 			}
 		}
 	}
@@ -34,7 +34,7 @@ public class Utils {
 	public static void paintItWhite(Mat mat) {
 	    for (int i = 0; i < mat.rows(); i++) {
 	        for (int j = 0; j < mat.cols(); j++) {
-	            mat.put(i, j, Pixel.WHITE);
+	            mat.put(i, j, Pixel.bgrWhite);
 	        }
 	    }
 	}

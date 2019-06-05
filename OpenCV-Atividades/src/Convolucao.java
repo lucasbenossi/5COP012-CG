@@ -99,9 +99,9 @@ public class Convolucao {
 				double mean = (result[0] + result[1] + result[2]) / 3;
 				
 				if(mean > limiar) {
-					novo.put(i, j, Pixel.BLACK);
+					novo.put(i, j, Pixel.bgrBlack);
 				} else{
-					novo.put(i, j, Pixel.WHITE);
+					novo.put(i, j, Pixel.bgrWhite);
 				}
 			}
 		}
@@ -118,7 +118,7 @@ public class Convolucao {
 				if(pixel != null) {
 					h.put(k, l, pixel);
 				} else {
-					h.put(k, l, Pixel.BLACK);
+					h.put(k, l, Pixel.bgrBlack);
 				}
 			}
 		}
