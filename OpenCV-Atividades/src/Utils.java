@@ -23,17 +23,22 @@ public class Utils {
 		return true;
 	}
 	
-	public static Mat createBlackImg(int rows, int cols, int type) {
-		Mat mat = new Mat(rows, cols, type);
+	public static void paintItBlack(Mat mat) {
 		double[] black = {0, 0, 0};
-		
-		for(int i = 0; i < rows; i++) {
-			for(int j = 0; j < cols; j++) {
+		for(int i = 0; i < mat.rows(); i++) {
+			for(int j = 0; j < mat.cols(); j++) {
 				mat.put(i, j, black);
 			}
 		}
-		
-		return mat;
+	}
+
+	public static void paintItWhite(Mat mat) {
+		double[] white = {255, 255, 255};
+	    for (int i = 0; i < mat.rows(); i++) {
+	        for (int j = 0; j < mat.cols(); j++) {
+	            mat.put(i, j, white);
+	        }
+	    }
 	}
 
 	static BufferedImage matToBufferedImage(Mat mat) {
@@ -45,13 +50,5 @@ public class Utils {
 			}
 		}
 		return img;
-	}
-
-	public static void fillWhite(Mat mat) {
-	    for (int i = 0; i < mat.rows(); i++) {
-	        for (int j = 0; j < mat.cols(); j++) {
-	            mat.put(i, j, Esqueletizacao.white);
-	        }
-	    }
 	}
 }

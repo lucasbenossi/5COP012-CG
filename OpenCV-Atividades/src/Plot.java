@@ -13,7 +13,7 @@ public class Plot {
 	public static void plot() {
 		int rows = 500;
 		int cols = 500;
-		Function function = new Function("f(x) = sen(x)");
+		Function function = new Function("f(x) = x^2");
 
 		double hViewLo = -1;
 		double hViewHi = 1;
