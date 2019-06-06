@@ -40,6 +40,10 @@ public class Imagem {
 		return this.mat;
 	}
 	
+	public Imagem cadeia() {
+		return new Imagem(this.name + "-cadeia", Cadeia.cadeia(this.mat));
+	}
+	
 	public Imagem preenchimento(int i, int j, double[] novo, double limiar) {
 		return new Imagem(this.name + "-preenchimento", Preencimento.preencher(this.mat, i, j, novo, limiar));
 	}
