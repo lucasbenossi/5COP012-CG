@@ -1,6 +1,5 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -50,7 +49,6 @@ public class Plot {
 			double y = new Expression("f("+x+")", function).calculate();
 			i = (int) (rows - (y - vViewLo) / iSteps);
 			if(i >= 0 && i < rows){
-//				System.out.println(i + " " + j);
 				screen.setRGB(j, i, Color.BLACK.getRGB());
 			}
 		}

@@ -40,6 +40,10 @@ public class Imagem {
 		return this.mat;
 	}
 	
+	public Imagem hough() {
+		return new Imagem(this.name + "-hough", Hough.hough(this.mat));
+	}
+	
 	public Imagem cadeia() {
 		return new Imagem(this.name + "-cadeia", Cadeia.cadeia(this.mat));
 	}
