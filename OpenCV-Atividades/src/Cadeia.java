@@ -1,7 +1,11 @@
 import org.opencv.core.Mat;
 
 public class Cadeia {
-	public static Mat cadeia(Mat img) {
+	public static Mat cadeia(Mat img) throws RuntimeException {
+		if(!Matrix.isBinary(img)) {
+			throw new RuntimeException("Imagem não é binária.");
+		}
+		
 		Mat clone = img.clone();
 		
 		int startI = 0;
@@ -10,8 +14,7 @@ public class Cadeia {
 		boolean running = true;
 		for(int i = 0; i < img.rows() && running; i++) {
 			for(int j = 0; j < img.cols(); j++) {
-				double[] pixel = img.get(i, j);
-				if(pixel[0] == 0) {
+				if(Pixel.isBlack(img.get(i, j))) {
 					running = false;
 					startI = i;
 					startJ = j;
@@ -41,7 +44,7 @@ public class Cadeia {
 			i += d.i;
 			j += d.j;
 			clone.put(i, j, color);
-			System.out.println(d.ordinal());
+			System.out.println(d);
 		} while(i != startI || j != startJ);
 		
 		return clone;

@@ -2,6 +2,10 @@ import org.opencv.core.Mat;
 
 public class BugFollower {
 	public static Mat simple(Mat img) {
+		if(!Matrix.isBinary(img)) {
+			throw new RuntimeException("Imagem não é binária.");
+		}
+		
 		Mat clone = img.clone();
 		
 		int startI = 0;
@@ -9,8 +13,7 @@ public class BugFollower {
 		boolean running = true;
 		for(int i = 0; i < img.rows() && running; i++) {
 			for(int j = 0; j < img.cols(); j++) {
-				double[] pixel = img.get(i, j);
-				if(pixel[0] == 0) {
+				if(Pixel.isBlack(img.get(i, j))) {
 					running = false;
 					startI = i;
 					startJ = j;
@@ -26,8 +29,10 @@ public class BugFollower {
 			double[] pixel = img.get(bug.i, bug.j);
 			if(pixel[0] == 0) {
 				direction = direction.esquerda();
+				System.out.println("esquerda " + direction);
 			} else if(pixel[0] == 255) {
 				direction = direction.direita();
+				System.out.println("direita " + direction);
 			}
 			bug.move(direction);
 			clone.put(bug.i, bug.j, color);
