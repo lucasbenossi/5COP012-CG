@@ -13,17 +13,38 @@ class Pixel {
 	}
 	
 	public boolean isBlack() {
+		return Pixel.isBlack(this.bgr);
+	}
+	
+	public boolean isWhite() {
+		return Pixel.isWhite(this.bgr);
+	}
+	
+	public boolean isEqual(Pixel other) {
+		return Pixel.isEqual(this.bgr, other.bgr);
+	}
+	
+	public static boolean isEqual(double[] a, double[] b) {
+		for(int i = 0; i < 3; i++) {
+			if(a[i] != b[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean isBlack(double[] bgr) {
 		for (int c = 0; c < 3; c++) {
-			if(this.bgr[c] != 0) {
+			if(bgr[c] != 0) {
 				return false;
 			}
 		}
 		return true;
 	}
 	
-	public boolean isWhite() {
+	public static boolean isWhite(double bgr[]) {
 		for(int c = 0; c < 3; c++) {
-			if(this.bgr[c] != 255) {
+			if(bgr[c] != 255) {
 				return false;
 			}
 		}

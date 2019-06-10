@@ -34,7 +34,7 @@ public class PreenchimentoJanela {
 		JButton resetButton = new JButton("reset");
 
 		JLabel display = new JLabel();
-		display.setIcon(new ImageIcon(Utils.matToBufferedImage(mat)));
+		display.setIcon(new ImageIcon(Matrix.matToBufferedImage(mat)));
 
 		JPanel seletor = new JPanel();
 		seletor.add(display);
@@ -64,7 +64,7 @@ public class PreenchimentoJanela {
 				
 				Preencimento.preencherRecursivo(mat, y, x, mat.get(y, x), bgr, limiar);
 				
-				display.setIcon(new ImageIcon(Utils.matToBufferedImage(mat)));
+				display.setIcon(new ImageIcon(Matrix.matToBufferedImage(mat)));
 			}
 		});
 		
@@ -72,7 +72,7 @@ public class PreenchimentoJanela {
 			@Override
 			public void mouseClicked(MouseEvent event) {
 				mat = original.clone();
-				display.setIcon(new ImageIcon(Utils.matToBufferedImage(mat)));
+				display.setIcon(new ImageIcon(Matrix.matToBufferedImage(mat)));
 			}
 			
 		});

@@ -27,7 +27,7 @@ public class Imagem {
 	
 	public void show() {
 		JLabel display = new JLabel();
-		display.setIcon(new ImageIcon(Utils.matToBufferedImage(this.mat)));
+		display.setIcon(new ImageIcon(Matrix.matToBufferedImage(this.mat)));
 		
 		JFrame frame = new JFrame();
 		frame.add(display);
@@ -38,6 +38,10 @@ public class Imagem {
 	
 	public Mat getMat() {
 		return this.mat;
+	}
+	
+	public Imagem bugFollowerSimple() {
+		return new Imagem(this.name + "-bugFollowerSimples", BugFollower.simple(this.mat));
 	}
 	
 	public Imagem hough() {

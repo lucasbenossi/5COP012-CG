@@ -9,9 +9,9 @@ public class Preencimento {
 	}
 
 	public static void preencherRecursivo(Mat img, int i, int j, double[] inicial, double[] cor, double limiar) {
-		double[] pixel = Utils.pixelOrNull(img, i, j);
+		double[] pixel = Matrix.pixelOrNull(img, i, j);
 		
-		if(pixel != null && !Utils.isEqual(pixel, cor) && estaNoLimiar(pixel, inicial, limiar)) {
+		if(pixel != null && !Pixel.isEqual(pixel, cor) && estaNoLimiar(pixel, inicial, limiar)) {
 			img.put(i, j, cor);
 			preencherRecursivo(img, i, j-1, inicial, cor, limiar);
 			preencherRecursivo(img, i, j+1, inicial, cor, limiar);

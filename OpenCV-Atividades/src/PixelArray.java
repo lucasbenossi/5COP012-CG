@@ -20,7 +20,7 @@ class PixelArray implements Iterable<Pixel> {
 	
 	public Mat toMat() {
 		Mat mat = this.img.clone();
-		Utils.paintItBlack(mat);
+		Matrix.paintItBlack(mat);
 		
 		for(Pixel pixel : this.pixels) {
 			if(pixel.i >= 0 && pixel.i < this.img.rows() && pixel.j >= 0 && pixel.j < this.img.cols()) {

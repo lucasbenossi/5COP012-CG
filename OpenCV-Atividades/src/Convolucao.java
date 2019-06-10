@@ -17,7 +17,7 @@ public class Convolucao {
 				
 				for(int k = 0; k < 3; k++) {
 					for(int l = 0; l < 3; l++) {
-						double[] pixel = Utils.pixelOrNull(img, i-1+l, j-1+k);
+						double[] pixel = Matrix.pixelOrNull(img, i-1+l, j-1+k);
 						if(pixel != null) {
 							pixels.add(pixel);
 						}
@@ -113,7 +113,7 @@ public class Convolucao {
 		
 		for(int k = 0; k < 3; k++) {
 			for(int l = 0; l < 3; l++) {
-				double[] pixel = Utils.pixelOrNull(img, i-1+k, j-1+l);
+				double[] pixel = Matrix.pixelOrNull(img, i-1+k, j-1+l);
 				
 				if(pixel != null) {
 					h.put(k, l, pixel);

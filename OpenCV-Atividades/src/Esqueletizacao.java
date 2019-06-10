@@ -9,7 +9,7 @@ public class Esqueletizacao {
     
     public static Mat lantuejoul(Mat img) {
     	Mat result = new Mat(img.rows(), img.cols(), img.type());
-        Utils.paintItWhite(result);
+        Matrix.paintItWhite(result);
 
         Mat corroded = img.clone();
 
@@ -23,7 +23,7 @@ public class Esqueletizacao {
     
     private static Mat erosion(Mat img) {
         Mat result = new Mat(img.rows(), img.cols(), img.type());
-        Utils.paintItWhite(result);
+        Matrix.paintItWhite(result);
         for (int i = 1; i < img.rows() - 1; i++) {
             for (int j = 1; j < img.cols() - 1; j++) {
                 double[] centro = img.get(i, j);
@@ -50,7 +50,7 @@ public class Esqueletizacao {
     
     private static Mat dilate(Mat img) {
         Mat result = new Mat(img.rows(), img.cols(), img.type());
-        Utils.paintItWhite(result);
+        Matrix.paintItWhite(result);
         for (int i = 1; i < img.rows() - 1; i++) {
             for (int j = 1; j < img.cols() - 1; j++) {
                 double[] centro = img.get(i, j);

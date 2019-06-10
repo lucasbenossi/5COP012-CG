@@ -3,7 +3,7 @@ import java.awt.image.BufferedImage;
 
 import org.opencv.core.Mat;
 
-public class Utils {
+public class Matrix {
 	public static double[] pixelOrNull(Mat img, int i, int j) {
 		if(i >= 0 && i < img.rows()) {
 			if(j >= 0 && j < img.cols()) {
@@ -11,16 +11,6 @@ public class Utils {
 			}
 		}
 		return null;
-	}
-	
-	public static boolean isEqual(double[] a, double[] b) {
-		for(int i = 0; i < 3; i++) {
-			if(a[i] != b[i]) {
-				return false;
-			}
-		}
-		
-		return true;
 	}
 	
 	public static void paintItBlack(Mat mat) {
@@ -48,5 +38,17 @@ public class Utils {
 			}
 		}
 		return img;
+	}
+	
+	public static boolean isBinary(Mat mat) {
+		for(int i = 0; i < mat.rows(); i++) {
+			for(int j = 0; j < mat.cols(); j++) {
+				double pixel[] = mat.get(i, j);
+				if(!Pixel.isBlack(pixel) && !Pixel.isWhite(pixel)) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }
