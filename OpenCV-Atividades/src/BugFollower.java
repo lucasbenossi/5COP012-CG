@@ -1,7 +1,8 @@
+
 import org.opencv.core.Mat;
 
 public class BugFollower {
-	public static Mat simple(Mat img) {
+	public static Mat bugFollower(Mat img, BugFollowerType type) {
 		if(!Matrix.isBinary(img)) {
 			throw new RuntimeException("Imagem não é binária.");
 		}
@@ -22,36 +23,60 @@ public class BugFollower {
 			}
 		}
 		
-		Bug bug = new Bug(startI, startJ);
+		Bug bug = new Bug(clone, startI, startJ);
 		Direction direction = Direction.east;
 		do {
-			double[] pixel = img.get(bug.i, bug.j);
-			if(pixel[0] == 0) {
-				direction = direction.esquerda();
-				System.out.println("esquerda " + direction);
-			} else if(pixel[0] == 255) {
-				direction = direction.direita();
-				System.out.println("direita " + direction);
+			double[] bgr = img.get(bug.i, bug.j);
+			if(type.equals(BugFollowerType.simple)) {
+				if(Pixel.isBlack(bgr)) {
+					direction = direction.esquerda();
+					bug.move(direction);
+				} else if(Pixel.isWhite(bgr)) {
+					direction = direction.direita();
+					bug.move(direction);
+				}
+			} else if(type.equals(BugFollowerType.backtracking)) {
+				if(Pixel.isBlack(bgr)) {
+					direction = direction.back();
+					bug.move(direction);
+					direction = direction.direita();
+					bug.move(direction);
+				} else if(Pixel.isWhite(bgr)) {
+					direction = direction.direita();
+					bug.move(direction);
+				}
 			}
-			bug.move(direction);
-			clone.put(bug.i, bug.j, Pixel.bgrFuchsia);
-		} while (bug.i != startI || bug.j != startJ);
+		} while (!bug.isFinished());
 		
 		return clone;
 	}
 	
 	private static class Bug {
-		int i, j;
+		int startI, startJ, i, j;
+		private Mat mat;
+		private int moves;
 		
-		public Bug(int i, int j) {
+		public Bug(Mat mat, int startI, int startJ) {
 			super();
-			this.i = i;
-			this.j = j;
+			this.startI = startI;
+			this.startJ = startJ;
+			this.mat = mat;
+			
+			this.i = startI;
+			this.j = startJ;
+			
+			this.moves = 0;
 		}
 		
 		public void move(Direction d) {
 			this.i += d.i;
 			this.j += d.j;
+			mat.put(i, j, Pixel.bgrFuchsia);
+			this.moves++;
+		}
+		
+		public boolean isFinished() {
+			return i == startI && j == startJ && moves > 20;
 		}
 	}
 	
@@ -71,6 +96,10 @@ public class BugFollower {
 		
 		public Direction esquerda() {
 			return Direction.values()[(this.ordinal() + 1) % 4];
+		}
+		
+		public Direction back() {
+			return Direction.values()[(this.ordinal() + 2) % 4];
 		}
 	}
 	

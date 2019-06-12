@@ -41,7 +41,11 @@ public class Imagem {
 	}
 	
 	public Imagem bugFollowerSimple() {
-		return new Imagem(this.name + "-bugFollowerSimples", BugFollower.simple(this.mat));
+		return new Imagem(this.name + "-bugFollowerSimple", BugFollower.bugFollower(this.mat, BugFollower.BugFollowerType.simple));
+	}
+	
+	public Imagem bugFollowerBacktracking() {
+		return new Imagem(this.name + "-bugFollowerBacktracking", BugFollower.bugFollower(this.mat, BugFollower.BugFollowerType.backtracking));
 	}
 	
 	public Imagem hough() {
