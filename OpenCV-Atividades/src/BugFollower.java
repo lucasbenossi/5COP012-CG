@@ -24,7 +24,6 @@ public class BugFollower {
 		
 		Bug bug = new Bug(startI, startJ);
 		Direction direction = Direction.east;
-		double[] color = {255,255,0};
 		do {
 			double[] pixel = img.get(bug.i, bug.j);
 			if(pixel[0] == 0) {
@@ -35,7 +34,7 @@ public class BugFollower {
 				System.out.println("direita " + direction);
 			}
 			bug.move(direction);
-			clone.put(bug.i, bug.j, color);
+			clone.put(bug.i, bug.j, Pixel.bgrFuchsia);
 		} while (bug.i != startI || bug.j != startJ);
 		
 		return clone;
@@ -73,6 +72,10 @@ public class BugFollower {
 		public Direction esquerda() {
 			return Direction.values()[(this.ordinal() + 1) % 4];
 		}
+	}
+	
+	public static enum BugFollowerType {
+		simple, backtracking;
 	}
 	
 	public static void main(String[] args) {

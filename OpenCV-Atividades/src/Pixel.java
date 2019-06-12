@@ -2,6 +2,7 @@
 class Pixel {
 	public static double[] bgrBlack = {0, 0, 0};
 	public static double[] bgrWhite = {255, 255, 255};
+	public static double[] bgrFuchsia = {255, 0, 255};
 	
 	double i, j;
 	double[] bgr;

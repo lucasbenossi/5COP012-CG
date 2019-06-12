@@ -25,8 +25,7 @@ public class Cadeia {
 		
 		int i = startI;
 		int j = startJ;
-		double[] color = {255,255,0};
-		clone.put(i, j, color);
+		clone.put(i, j, Pixel.bgrFuchsia);
 		
 		Direction anterior = Direction.east;
 		do {
@@ -43,7 +42,7 @@ public class Cadeia {
 			
 			i += d.i;
 			j += d.j;
-			clone.put(i, j, color);
+			clone.put(i, j, Pixel.bgrFuchsia);
 			System.out.println(d);
 		} while(i != startI || j != startJ);
 		
