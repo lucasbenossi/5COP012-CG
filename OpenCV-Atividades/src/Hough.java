@@ -3,6 +3,10 @@ import org.opencv.core.Mat;
 public class Hough {
 
 	public static Mat hough(Mat mat) {
+		if(!Matrix.isBinary(mat)) {
+			throw new RuntimeException("Imagem não é binária.");
+		}
+		
 		Mat clone = mat.clone();
 		
 		int rMax = (int) Math.sqrt(Math.pow(mat.rows(), 2) + Math.pow(mat.cols(), 2));
@@ -36,7 +40,7 @@ public class Hough {
 		for(int i = 0; i < acumulator.length; i++) {
 			double rad = Math.toRadians(i);
 			for(int j = 0; j < acumulator[i].length; j++) {
-				if(acumulator[i][j] > max * 0.8) {
+				if(acumulator[i][j] > max * 0.95) {
 					for(int x = 0; x < mat.cols(); x++) {
 						int r = j - rMax;
 						int y = (int) ((-1 * (Math.cos(rad) / Math.sin(rad))) * x + r / Math.sin(rad));

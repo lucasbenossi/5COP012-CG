@@ -40,6 +40,10 @@ public class Imagem {
 		return this.mat;
 	}
 	
+	public Imagem binary(double[] fill) {
+		return new Imagem(this.name + "-binary", Matrix.toBinary(this.mat, fill));
+	}
+	
 	public Imagem bugFollowerSimple() {
 		return new Imagem(this.name + "-bugFollowerSimple", BugFollower.bugFollower(this.mat, BugFollower.BugFollowerType.simple));
 	}

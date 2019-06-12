@@ -51,4 +51,16 @@ public class Matrix {
 		}
 		return true;
 	}
+	
+	public static Mat toBinary(Mat mat, double[] fill) {
+		for(int i = 0; i < mat.rows(); i++) {
+			for(int j = 0; j < mat.cols(); j++) {
+				double pixel[] = mat.get(i, j);
+				if(!Pixel.isBlack(pixel) && !Pixel.isWhite(pixel)) {
+					mat.put(i, j, fill);
+				}
+			}
+		}
+		return mat;
+	}
 }
