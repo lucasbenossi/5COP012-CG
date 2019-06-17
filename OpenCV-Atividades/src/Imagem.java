@@ -30,6 +30,7 @@ public class Imagem {
 		display.setIcon(new ImageIcon(Matrix.matToBufferedImage(this.mat)));
 		
 		JFrame frame = new JFrame();
+		frame.setTitle(this.name);
 		frame.add(display);
 		frame.pack();
 		frame.setVisible(true);
