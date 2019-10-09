@@ -28,7 +28,7 @@ def main() -> None:
     }
     """
 
-    window = app.Window(width=512, height=512, color=(0, 0, 0, 1))
+    window = app.Window(color=(0, 0, 0, 1))
 
     phi = 0.0
     theta = 0.0
@@ -43,11 +43,10 @@ def main() -> None:
     def on_draw(dt):
         nonlocal phi, theta, omega, dx, dy, dz, scale, d
 
-        matrix = np.eye(4, dtype=np.float32)
-
-        glm.rotate(matrix, phi, 0, 1, 0)
-        glm.rotate(matrix, theta, 0, 0, 1)
-        glm.rotate(matrix, omega, 1, 0, 0)
+        matrix = np.eye(4, 4, dtype=np.float32)
+        glm.xrotate(matrix, omega)
+        glm.yrotate(matrix, phi)
+        glm.zrotate(matrix, theta)
         glm.scale(matrix, scale, scale, scale)
         glm.translate(matrix, dx, dy, dz)
 
@@ -118,7 +117,6 @@ def main() -> None:
     I = I.view(gloo.IndexBuffer)
 
     cube = gloo.Program(vertex, fragment)
-    cube['position'] = [project(*p, d) for p in V]
     cube['color'] = [[0, 1, 1, 1], [0, 0, 1, 1], [1, 1, 1, 1], [0, 1, 0, 1],
                      [1, 1, 0, 1], [1, 1, 1, 1], [1, 0, 1, 1], [1, 0, 0, 1]]
 
