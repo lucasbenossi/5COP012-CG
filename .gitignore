@@ -1,1 +1,7 @@
 bin/
+*.pyc
+__pycache__/
+.mypy_cache/
+.idea/
+*.png
+
