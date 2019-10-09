@@ -4,7 +4,7 @@ import numpy as np
 from glumpy import app, gl, glm, gloo
 
 
-def project(x, y, z, d=2):
+def project(x, y, z, d):
     return [(x * d) / (z + d), (y * d) / (z + d)]
 
 
@@ -37,10 +37,11 @@ def main() -> None:
     dy = 0.0
     dz = 0.0
     scale = 1.0
+    d = 2
 
     @window.event
     def on_draw(dt):
-        nonlocal phi, theta, omega, dx, dy, dz, scale
+        nonlocal phi, theta, omega, dx, dy, dz, scale, d
 
         matrix = np.eye(4, dtype=np.float32)
 
@@ -52,14 +53,14 @@ def main() -> None:
 
         result = [np.matmul([*p, 1], matrix)[0:3] for p in V]
 
-        cube['position'] = [project(*p) for p in result]
+        cube['position'] = [project(*p, d) for p in result]
 
         window.clear()
         cube.draw(gl.GL_LINE_LOOP, I)
 
     @window.event
     def on_key_press(symbol, modifiers):
-        nonlocal phi, theta, omega, dx, dy, dz, scale
+        nonlocal phi, theta, omega, dx, dy, dz, scale, d
         if symbol == 45 and modifiers == 1:  # shift -
             scale -= 0.1
         elif symbol == 61 and modifiers == 1:  # shit +
@@ -84,7 +85,11 @@ def main() -> None:
             omega += 10.0
         elif symbol == 80:  # P
             omega -= 10.0
-        elif symbol == 32:
+        elif symbol == 76:  # L
+            d += 0.1
+        elif symbol == 75:  # K
+            d -= 0.1
+        elif symbol == 32:  # space
             phi = 0.0
             theta = 0.0
             omega = 0.0
@@ -92,6 +97,7 @@ def main() -> None:
             dy = 0.0
             dz = 0.0
             scale = 1.0
+            d = 2
 
     V = np.array([[.5, .5, .5], [-.5, .5, .5], [-.5, -.5, .5], [.5, -.5, .5],
                   [.5, -.5, -.5], [.5, .5, -.5], [-.5, .5, -.5], [-.5, -.5, -.5]])
@@ -112,7 +118,7 @@ def main() -> None:
     I = I.view(gloo.IndexBuffer)
 
     cube = gloo.Program(vertex, fragment)
-    cube['position'] = [project(*p) for p in V]
+    cube['position'] = [project(*p, d) for p in V]
     cube['color'] = [[0, 1, 1, 1], [0, 0, 1, 1], [1, 1, 1, 1], [0, 1, 0, 1],
                      [1, 1, 0, 1], [1, 1, 1, 1], [1, 0, 1, 1], [1, 0, 0, 1]]
 
