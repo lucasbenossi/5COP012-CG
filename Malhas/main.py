@@ -1,14 +1,8 @@
-import itertools
-
 import numpy as np
 from glumpy import app, gl, glm, gloo
 
 
-def project(x, y, z, d):
-    return [(x * d) / (z + d), (y * d) / (z + d)]
-
-
-def main() -> None:
+def draw(vertices, indexes) -> None:
     vertex = """
     attribute vec3 position;
     attribute vec4 color;
@@ -110,33 +104,39 @@ def main() -> None:
             scale = 1.0
             d = 2
 
-    V = np.zeros(8, [('position', np.float32, 3),
-                     ('color', np.float32, 4)])
-    V['position'] = [[1, 1, 1], [-1, 1, 1], [-1, -1, 1], [1, -1, 1],
-                     [1, -1, -1], [1, 1, -1], [-1, 1, -1], [-1, -1, -1]]
-    V['color'] = [[0, 1, 1, 1], [0, 0, 1, 1], [1, 1, 1, 1], [0, 1, 0, 1],
-                  [1, 1, 0, 1], [1, 1, 1, 1], [1, 0, 1, 1], [1, 0, 0, 1]]
+    V = np.zeros(len(vertices), [('position', np.float32, 3)])
+    V['position'] = vertices
     V = V.view(gloo.VertexBuffer)
 
-    I = np.array([0, 1, 2,
-                  0, 2, 3,
-                  0, 3, 4,
-                  0, 4, 5,
-                  0, 5, 6,
-                  0, 6, 1,
-                  1, 6, 7,
-                  1, 7, 2,
-                  7, 4, 3,
-                  7, 3, 2,
-                  4, 7, 6,
-                  4, 6, 5], dtype=np.uint32)
+    I = np.array(indexes, dtype=np.uint32)
     I = I.view(gloo.IndexBuffer)
 
     cube = gloo.Program(vertex, fragment)
     cube['view'] = glm.translation(0, 0, -5)
+    cube['color'] = [1.0, 0.0, 0.0, 1.0]
     cube.bind(V)
 
     app.run(framerate=60)
+
+
+def main() -> None:
+    edge_list = np.genfromtxt('cube/edge.csv', dtype=np.int, delimiter=',')
+    face_list = np.genfromtxt('cube/face.csv', dtype=np.int, delimiter=',')
+    vertex_list = np.genfromtxt('cube/vertex.csv', dtype=np.float, delimiter=',')
+
+    V = vertex_list[:, 0:3]
+
+    I = []
+    for face in face_list:
+        points = set()
+        for edge in [edge_list[i] for i in face]:
+            points.add(edge[0])
+            points.add(edge[1])
+
+        for p in points:
+            I.append(p)
+
+    draw(V, I)
 
 
 if __name__ == '__main__':
