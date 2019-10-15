@@ -1,3 +1,5 @@
+from typing import List, Dict
+
 import numpy as np
 from glumpy import app, gl, glm, gloo
 
@@ -119,22 +121,36 @@ def draw(vertices, indexes) -> None:
     app.run(framerate=60)
 
 
-def main() -> None:
-    edge_list = np.genfromtxt('cube/edge.csv', dtype=np.int, delimiter=',')
-    face_list = np.genfromtxt('cube/face.csv', dtype=np.int, delimiter=',')
-    vertex_list = np.genfromtxt('cube/vertex.csv', dtype=np.float, delimiter=',')
+def parse(file: str) -> Dict[str, List[str]]:
+    with open(file) as fp:
+        lines = fp.readlines()
 
-    V = vertex_list[:, 0:3]
+    dct = dict()
+    for line in lines:
+        parts = line.strip().split(',')
+        dct[parts[0]] = parts[1:]
+
+    return dct
+
+
+def main() -> None:
+    edge_dct = parse('cube/edge.csv')
+    vertex_dct = parse('cube/vertex.csv')
+    face_dct = parse('cube/face.csv')
+
+    V = []
+    for vertex in vertex_dct.values():
+        V.append([float(vertex[0]), float(vertex[1]), float(vertex[2])])
 
     I = []
-    for face in face_list:
+    for face in face_dct.values():
         points = set()
-        for edge in [edge_list[i] for i in face]:
+        for edge in [edge_dct[i] for i in face]:
             points.add(edge[0])
             points.add(edge[1])
 
         for p in points:
-            I.append(p)
+            I.append(int(p.replace('v', '')))
 
     draw(V, I)
 
