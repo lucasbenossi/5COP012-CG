@@ -41,10 +41,11 @@ def draw(vertices, indexes, color=None) -> None:
     scale = 1.0
     d = 2
 
-    if not color:
-        color = gen_colors(len(vertices))
-
+    blue = [0.0, 0.0, 1.0, 1.0]
     red = [1.0, 0.0, 0.0, 1.0]
+
+    if not color:
+        color = [red for _ in range(len(vertices))]
 
     @window.event
     def on_init():
@@ -112,13 +113,13 @@ def draw(vertices, indexes, color=None) -> None:
             dz = 0.0
             scale = 1.0
             d = 2
-            color[color.index(red)] = [1.0, 1.0, 1.0, 1.0]
+            color[color.index(blue)] = red
         elif symbol == 71:  # G
-            if red not in color:
-                color[0] = red
+            if blue not in color:
+                color[0] = blue
             else:
                 color.insert(0, color.pop())
-            print(color.index(red))
+            print(color.index(blue))
 
     V = np.zeros(len(vertices), [('position', np.float32, 3)])
     V['position'] = vertices
@@ -132,8 +133,3 @@ def draw(vertices, indexes, color=None) -> None:
     cube.bind(V)
 
     app.run(framerate=60)
-
-
-def gen_colors(n: int) -> List[List[float]]:
-    lst = [[1.0, 1.0, 1.0, 1.0] for _ in range(n)]
-    return lst
