@@ -1,4 +1,5 @@
 import argparse
+from itertools import product
 from typing import List, Dict, NamedTuple, Tuple, Set
 
 from draw import draw

@@ -1,8 +1,10 @@
+from typing import List
+
 import numpy as np
 from glumpy import app, gl, glm, gloo
 
 
-def draw(vertices, indexes) -> None:
+def draw(vertices, indexes, color=None) -> None:
     vertex = """
     attribute vec3 position;
     attribute vec4 color;
@@ -39,9 +41,15 @@ def draw(vertices, indexes) -> None:
     scale = 1.0
     d = 2
 
+    if not color:
+        color = gen_colors(len(vertices))
+
+    red = [1.0, 0.0, 0.0, 1.0]
+
     @window.event
     def on_init():
         gl.glEnable(gl.GL_DEPTH_TEST)
+        gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_LINE)
 
     @window.event
     def on_resize(width, height):
@@ -59,9 +67,10 @@ def draw(vertices, indexes) -> None:
         glm.translate(model, dx, dy, dz)
 
         cube['model'] = model
+        cube['color'] = color
 
         window.clear()
-        cube.draw(gl.GL_LINE_LOOP, I)
+        cube.draw(gl.GL_TRIANGLES, I)
 
     @window.event
     def on_key_press(symbol, modifiers):
@@ -103,6 +112,13 @@ def draw(vertices, indexes) -> None:
             dz = 0.0
             scale = 1.0
             d = 2
+            color[color.index(red)] = [1.0, 1.0, 1.0, 1.0]
+        elif symbol == 71:  # G
+            if red not in color:
+                color[0] = red
+            else:
+                color.insert(0, color.pop())
+            print(color.index(red))
 
     V = np.zeros(len(vertices), [('position', np.float32, 3)])
     V['position'] = vertices
@@ -113,7 +129,11 @@ def draw(vertices, indexes) -> None:
 
     cube = gloo.Program(vertex, fragment)
     cube['view'] = glm.translation(0, 0, -5)
-    cube['color'] = [1.0, 0.0, 0.0, 1.0]
     cube.bind(V)
 
     app.run(framerate=60)
+
+
+def gen_colors(n: int) -> List[List[float]]:
+    lst = [[1.0, 1.0, 1.0, 1.0] for _ in range(n)]
+    return lst
