@@ -66,8 +66,8 @@ def draw(vertices, indexes, color=None) -> None:
         glm.zrotate(model, theta)
         glm.scale(model, scale, scale, scale)
         glm.translate(model, dx, dy, dz)
-
         cube['model'] = model
+
         cube['color'] = color
 
         window.clear()
