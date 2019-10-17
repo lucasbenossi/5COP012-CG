@@ -65,43 +65,38 @@ def main() -> None:
     faces: Dict[str, Face] = {k: Face(list(v))
                               for k, v in parse(f'{args.dir}/face.csv').items()}
 
-    # noinspection PyShadowingNames
-    def find_face_vertices(face: Face) -> Set[str]:
-        return {vertex_key
-                for edge in [edges[i] for i in face.edges]
-                for vertex_key in edge.vertices}
-
     if args.show:
         show(vertices, edges, faces)
     elif args.vertex and len(args.vertex) == 1 and args.vertices:
         vertex_key = args.vertex[0]
-        _ = vertices[vertex_key]
-        connected_vertices: Set[str] = set()
-        for edge in edges.values():
-            if vertex_key in edge.vertices:
-                connected_vertices.update(edge.vertices)
+        vertex = vertices[vertex_key]
+        connected_vertices = {v
+                              for edge in (edges[i] for i in vertex.edges)
+                              for v in edge.vertices}
         print(sorted(connected_vertices - {vertex_key}))
     elif args.face and args.vertices:
         face = faces[args.face]
-        print(sorted(find_face_vertices(face)))
+        face_vertices = {v
+                         for edge in (edges[i] for i in face.edges)
+                         for v in edge.vertices}
+        print(sorted(face_vertices))
     elif args.face and args.edges:
         print(sorted(faces[args.face].edges))
     elif args.vertex and len(args.vertex) == 1 and args.faces:
         vertex_key = args.vertex[0]
-        _ = vertices[vertex_key]
-        faces_key_set: Set[str] = set()
-        for edge in edges.values():
-            if vertex_key in edge.vertices:
-                faces_key_set.update(edge.faces)
-        print(sorted(faces_key_set))
+        vertex = vertices[vertex_key]
+        vertex_faces = {f
+                        for edge in (edges[i] for i in vertex.edges)
+                        for f in edge.faces}
+        print(sorted(vertex_faces))
     elif args.edge and args.vertices:
-        edge = edges[args.edge]
-        print(sorted(edge.vertices))
+        print(sorted(edges[args.edge].vertices))
     elif args.vertex and len(args.vertex) == 3:
-        vertices_face_dct = dict()
-        for face_key, face in faces.items():
-            vertices_face_dct[','.join(sorted(find_face_vertices(face)))] = face_key
-        print(vertices_face_dct[','.join(sorted(args.vertex))])
+        sets = [{f
+                 for edge in (edges[i] for i in vertex.edges)
+                 for f in edge.faces}
+                for vertex in (vertices[i] for i in args.vertex)]
+        print(sets[0] & sets[1] & sets[2])
     else:
         print('invalid argument')
 
